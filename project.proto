@@ -58,13 +58,15 @@ message Project {
 }
 
 message ProjectOperationResponse {
-    Project project = 1;
-    int32 memberId = 2;
-    repeated Credential credentials = 3;
+    ProjectOperation.Command command = 1;
+    Project project = 2;
+    int32 memberId = 3;
+    repeated Credential credentials = 4;
 }
 
 message CredentialOperationResponse {
-    Credential credential = 1;
+    CredentialOperation.Command command = 1;
+    Credential credential = 2;
 }
 
 message Response {
