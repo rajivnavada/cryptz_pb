@@ -44,24 +44,38 @@ message Operation {
     }
 }
 
+message Credential {
+    int32 id = 1;
+    string key = 2;
+    string cipher = 3;
+}
+
+message Project {
+    int32 id = 1;
+    string name = 2;
+    string environment = 3;
+}
+
 message ProjectOperationResponse {
+    Project project = 1;
+    int32 memberId = 2;
+    repeated Credential credentials = 3;
+}
+
+message CredentialOperationResponse {
+    Credential credential = 1;
+}
+
+message Response {
     enum Status {
         ERROR = 0;
         SUCCESS = 1;
     }
-
-    message Project {
-        int32 id = 1;
-        string name = 2;
-        string environment = 3;
-    }
-
     Status status = 1;
     string error = 2;
-    Project project = 3;
-    int32 memberId = 4;
-}
 
-message Response {
-    ProjectOperationResponse projectOpResponse = 1;
+    oneof ProjectOrCredentialResponse {
+        ProjectOperationResponse projectOpResponse = 3;
+        CredentialOperationResponse credentialOpResponse = 4;
+    }
 }
