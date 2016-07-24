@@ -72,11 +72,13 @@ message Response {
         ERROR = 0;
         SUCCESS = 1;
     }
+
     Status status = 1;
     string error = 2;
+    string info = 3;
 
     oneof ProjectOrCredentialResponse {
-        ProjectOperationResponse projectOpResponse = 3;
-        CredentialOperationResponse credentialOpResponse = 4;
+        ProjectOperationResponse projectOpResponse = 4;
+        CredentialOperationResponse credentialOpResponse = 5;
     }
 }
