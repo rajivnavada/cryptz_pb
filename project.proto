@@ -1,0 +1,21 @@
+syntax = "proto3";
+package crypto_pb;
+
+message Credential {
+    int32 project = 1;
+    string key = 2;
+    string value = 3;
+}
+
+message ProjectCredentialOperation {
+
+    enum Command {
+        GET = 0;
+        SET = 1; // Even updates can be handled via ADD
+        DELETE = 2;
+    }
+
+    Command command = 1;
+    repeated Credential credentials = 2;
+    
+}
