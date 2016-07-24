@@ -9,8 +9,11 @@ It is generated from these files:
 	project.proto
 
 It has these top-level messages:
-	Credential
 	ProjectCredentialOperation
+	ProjectOperation
+	Operation
+	ProjectOperationResponse
+	Response
 */
 package crypto_pb
 
@@ -52,59 +55,309 @@ func (x ProjectCredentialOperation_Command) String() string {
 	return proto.EnumName(ProjectCredentialOperation_Command_name, int32(x))
 }
 func (ProjectCredentialOperation_Command) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor0, []int{1, 0}
+	return fileDescriptor0, []int{0, 0}
 }
 
-type Credential struct {
-	Project int32  `protobuf:"varint,1,opt,name=project" json:"project,omitempty"`
-	Key     string `protobuf:"bytes,2,opt,name=key" json:"key,omitempty"`
-	Value   string `protobuf:"bytes,3,opt,name=value" json:"value,omitempty"`
+type ProjectOperation_Command int32
+
+const (
+	ProjectOperation_CREATE           ProjectOperation_Command = 0
+	ProjectOperation_UPDATE           ProjectOperation_Command = 1
+	ProjectOperation_DELETE           ProjectOperation_Command = 2
+	ProjectOperation_ADD_MEMBER       ProjectOperation_Command = 3
+	ProjectOperation_DELETE_MEMBER    ProjectOperation_Command = 4
+	ProjectOperation_LIST_CREDENTIALS ProjectOperation_Command = 5
+)
+
+var ProjectOperation_Command_name = map[int32]string{
+	0: "CREATE",
+	1: "UPDATE",
+	2: "DELETE",
+	3: "ADD_MEMBER",
+	4: "DELETE_MEMBER",
+	5: "LIST_CREDENTIALS",
+}
+var ProjectOperation_Command_value = map[string]int32{
+	"CREATE":           0,
+	"UPDATE":           1,
+	"DELETE":           2,
+	"ADD_MEMBER":       3,
+	"DELETE_MEMBER":    4,
+	"LIST_CREDENTIALS": 5,
 }
 
-func (m *Credential) Reset()                    { *m = Credential{} }
-func (m *Credential) String() string            { return proto.CompactTextString(m) }
-func (*Credential) ProtoMessage()               {}
-func (*Credential) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{0} }
+func (x ProjectOperation_Command) String() string {
+	return proto.EnumName(ProjectOperation_Command_name, int32(x))
+}
+func (ProjectOperation_Command) EnumDescriptor() ([]byte, []int) { return fileDescriptor0, []int{1, 0} }
+
+type ProjectOperationResponse_Status int32
+
+const (
+	ProjectOperationResponse_ERROR   ProjectOperationResponse_Status = 0
+	ProjectOperationResponse_SUCCESS ProjectOperationResponse_Status = 1
+)
+
+var ProjectOperationResponse_Status_name = map[int32]string{
+	0: "ERROR",
+	1: "SUCCESS",
+}
+var ProjectOperationResponse_Status_value = map[string]int32{
+	"ERROR":   0,
+	"SUCCESS": 1,
+}
+
+func (x ProjectOperationResponse_Status) String() string {
+	return proto.EnumName(ProjectOperationResponse_Status_name, int32(x))
+}
+func (ProjectOperationResponse_Status) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor0, []int{3, 0}
+}
 
 type ProjectCredentialOperation struct {
-	Command     ProjectCredentialOperation_Command `protobuf:"varint,1,opt,name=command,enum=crypto_pb.ProjectCredentialOperation_Command" json:"command,omitempty"`
-	Credentials []*Credential                      `protobuf:"bytes,2,rep,name=credentials" json:"credentials,omitempty"`
+	Command ProjectCredentialOperation_Command `protobuf:"varint,1,opt,name=command,enum=crypto_pb.ProjectCredentialOperation_Command" json:"command,omitempty"`
+	Project int32                              `protobuf:"varint,2,opt,name=project" json:"project,omitempty"`
+	Key     string                             `protobuf:"bytes,3,opt,name=key" json:"key,omitempty"`
+	Value   string                             `protobuf:"bytes,4,opt,name=value" json:"value,omitempty"`
 }
 
 func (m *ProjectCredentialOperation) Reset()                    { *m = ProjectCredentialOperation{} }
 func (m *ProjectCredentialOperation) String() string            { return proto.CompactTextString(m) }
 func (*ProjectCredentialOperation) ProtoMessage()               {}
-func (*ProjectCredentialOperation) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{1} }
+func (*ProjectCredentialOperation) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{0} }
 
-func (m *ProjectCredentialOperation) GetCredentials() []*Credential {
+type ProjectOperation struct {
+	Command     ProjectOperation_Command `protobuf:"varint,1,opt,name=command,enum=crypto_pb.ProjectOperation_Command" json:"command,omitempty"`
+	Name        string                   `protobuf:"bytes,2,opt,name=name" json:"name,omitempty"`
+	Environment string                   `protobuf:"bytes,3,opt,name=environment" json:"environment,omitempty"`
+	ProjectId   int32                    `protobuf:"varint,4,opt,name=projectId" json:"projectId,omitempty"`
+	MemberId    int32                    `protobuf:"varint,5,opt,name=memberId" json:"memberId,omitempty"`
+	UserId      int32                    `protobuf:"varint,6,opt,name=userId" json:"userId,omitempty"`
+	AccessLevel string                   `protobuf:"bytes,7,opt,name=accessLevel" json:"accessLevel,omitempty"`
+}
+
+func (m *ProjectOperation) Reset()                    { *m = ProjectOperation{} }
+func (m *ProjectOperation) String() string            { return proto.CompactTextString(m) }
+func (*ProjectOperation) ProtoMessage()               {}
+func (*ProjectOperation) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{1} }
+
+type Operation struct {
+	// Types that are valid to be assigned to ProjectOrCredentialOp:
+	//	*Operation_ProjectOp
+	//	*Operation_CredentialOp
+	ProjectOrCredentialOp isOperation_ProjectOrCredentialOp `protobuf_oneof:"ProjectOrCredentialOp"`
+}
+
+func (m *Operation) Reset()                    { *m = Operation{} }
+func (m *Operation) String() string            { return proto.CompactTextString(m) }
+func (*Operation) ProtoMessage()               {}
+func (*Operation) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{2} }
+
+type isOperation_ProjectOrCredentialOp interface {
+	isOperation_ProjectOrCredentialOp()
+}
+
+type Operation_ProjectOp struct {
+	ProjectOp *ProjectOperation `protobuf:"bytes,1,opt,name=projectOp,oneof"`
+}
+type Operation_CredentialOp struct {
+	CredentialOp *ProjectCredentialOperation `protobuf:"bytes,2,opt,name=credentialOp,oneof"`
+}
+
+func (*Operation_ProjectOp) isOperation_ProjectOrCredentialOp()    {}
+func (*Operation_CredentialOp) isOperation_ProjectOrCredentialOp() {}
+
+func (m *Operation) GetProjectOrCredentialOp() isOperation_ProjectOrCredentialOp {
 	if m != nil {
-		return m.Credentials
+		return m.ProjectOrCredentialOp
+	}
+	return nil
+}
+
+func (m *Operation) GetProjectOp() *ProjectOperation {
+	if x, ok := m.GetProjectOrCredentialOp().(*Operation_ProjectOp); ok {
+		return x.ProjectOp
+	}
+	return nil
+}
+
+func (m *Operation) GetCredentialOp() *ProjectCredentialOperation {
+	if x, ok := m.GetProjectOrCredentialOp().(*Operation_CredentialOp); ok {
+		return x.CredentialOp
+	}
+	return nil
+}
+
+// XXX_OneofFuncs is for the internal use of the proto package.
+func (*Operation) XXX_OneofFuncs() (func(msg proto.Message, b *proto.Buffer) error, func(msg proto.Message, tag, wire int, b *proto.Buffer) (bool, error), func(msg proto.Message) (n int), []interface{}) {
+	return _Operation_OneofMarshaler, _Operation_OneofUnmarshaler, _Operation_OneofSizer, []interface{}{
+		(*Operation_ProjectOp)(nil),
+		(*Operation_CredentialOp)(nil),
+	}
+}
+
+func _Operation_OneofMarshaler(msg proto.Message, b *proto.Buffer) error {
+	m := msg.(*Operation)
+	// ProjectOrCredentialOp
+	switch x := m.ProjectOrCredentialOp.(type) {
+	case *Operation_ProjectOp:
+		b.EncodeVarint(1<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.ProjectOp); err != nil {
+			return err
+		}
+	case *Operation_CredentialOp:
+		b.EncodeVarint(2<<3 | proto.WireBytes)
+		if err := b.EncodeMessage(x.CredentialOp); err != nil {
+			return err
+		}
+	case nil:
+	default:
+		return fmt.Errorf("Operation.ProjectOrCredentialOp has unexpected type %T", x)
+	}
+	return nil
+}
+
+func _Operation_OneofUnmarshaler(msg proto.Message, tag, wire int, b *proto.Buffer) (bool, error) {
+	m := msg.(*Operation)
+	switch tag {
+	case 1: // ProjectOrCredentialOp.projectOp
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(ProjectOperation)
+		err := b.DecodeMessage(msg)
+		m.ProjectOrCredentialOp = &Operation_ProjectOp{msg}
+		return true, err
+	case 2: // ProjectOrCredentialOp.credentialOp
+		if wire != proto.WireBytes {
+			return true, proto.ErrInternalBadWireType
+		}
+		msg := new(ProjectCredentialOperation)
+		err := b.DecodeMessage(msg)
+		m.ProjectOrCredentialOp = &Operation_CredentialOp{msg}
+		return true, err
+	default:
+		return false, nil
+	}
+}
+
+func _Operation_OneofSizer(msg proto.Message) (n int) {
+	m := msg.(*Operation)
+	// ProjectOrCredentialOp
+	switch x := m.ProjectOrCredentialOp.(type) {
+	case *Operation_ProjectOp:
+		s := proto.Size(x.ProjectOp)
+		n += proto.SizeVarint(1<<3 | proto.WireBytes)
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case *Operation_CredentialOp:
+		s := proto.Size(x.CredentialOp)
+		n += proto.SizeVarint(2<<3 | proto.WireBytes)
+		n += proto.SizeVarint(uint64(s))
+		n += s
+	case nil:
+	default:
+		panic(fmt.Sprintf("proto: unexpected type %T in oneof", x))
+	}
+	return n
+}
+
+type ProjectOperationResponse struct {
+	Status   ProjectOperationResponse_Status   `protobuf:"varint,1,opt,name=status,enum=crypto_pb.ProjectOperationResponse_Status" json:"status,omitempty"`
+	Error    string                            `protobuf:"bytes,2,opt,name=error" json:"error,omitempty"`
+	Project  *ProjectOperationResponse_Project `protobuf:"bytes,3,opt,name=project" json:"project,omitempty"`
+	MemberId int32                             `protobuf:"varint,4,opt,name=memberId" json:"memberId,omitempty"`
+}
+
+func (m *ProjectOperationResponse) Reset()                    { *m = ProjectOperationResponse{} }
+func (m *ProjectOperationResponse) String() string            { return proto.CompactTextString(m) }
+func (*ProjectOperationResponse) ProtoMessage()               {}
+func (*ProjectOperationResponse) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{3} }
+
+func (m *ProjectOperationResponse) GetProject() *ProjectOperationResponse_Project {
+	if m != nil {
+		return m.Project
+	}
+	return nil
+}
+
+type ProjectOperationResponse_Project struct {
+	Id          int32  `protobuf:"varint,1,opt,name=id" json:"id,omitempty"`
+	Name        string `protobuf:"bytes,2,opt,name=name" json:"name,omitempty"`
+	Environment string `protobuf:"bytes,3,opt,name=environment" json:"environment,omitempty"`
+}
+
+func (m *ProjectOperationResponse_Project) Reset()         { *m = ProjectOperationResponse_Project{} }
+func (m *ProjectOperationResponse_Project) String() string { return proto.CompactTextString(m) }
+func (*ProjectOperationResponse_Project) ProtoMessage()    {}
+func (*ProjectOperationResponse_Project) Descriptor() ([]byte, []int) {
+	return fileDescriptor0, []int{3, 0}
+}
+
+type Response struct {
+	ProjectOpResponse *ProjectOperationResponse `protobuf:"bytes,1,opt,name=projectOpResponse" json:"projectOpResponse,omitempty"`
+}
+
+func (m *Response) Reset()                    { *m = Response{} }
+func (m *Response) String() string            { return proto.CompactTextString(m) }
+func (*Response) ProtoMessage()               {}
+func (*Response) Descriptor() ([]byte, []int) { return fileDescriptor0, []int{4} }
+
+func (m *Response) GetProjectOpResponse() *ProjectOperationResponse {
+	if m != nil {
+		return m.ProjectOpResponse
 	}
 	return nil
 }
 
 func init() {
-	proto.RegisterType((*Credential)(nil), "crypto_pb.Credential")
 	proto.RegisterType((*ProjectCredentialOperation)(nil), "crypto_pb.ProjectCredentialOperation")
+	proto.RegisterType((*ProjectOperation)(nil), "crypto_pb.ProjectOperation")
+	proto.RegisterType((*Operation)(nil), "crypto_pb.Operation")
+	proto.RegisterType((*ProjectOperationResponse)(nil), "crypto_pb.ProjectOperationResponse")
+	proto.RegisterType((*ProjectOperationResponse_Project)(nil), "crypto_pb.ProjectOperationResponse.Project")
+	proto.RegisterType((*Response)(nil), "crypto_pb.Response")
 	proto.RegisterEnum("crypto_pb.ProjectCredentialOperation_Command", ProjectCredentialOperation_Command_name, ProjectCredentialOperation_Command_value)
+	proto.RegisterEnum("crypto_pb.ProjectOperation_Command", ProjectOperation_Command_name, ProjectOperation_Command_value)
+	proto.RegisterEnum("crypto_pb.ProjectOperationResponse_Status", ProjectOperationResponse_Status_name, ProjectOperationResponse_Status_value)
 }
 
 func init() { proto.RegisterFile("project.proto", fileDescriptor0) }
 
 var fileDescriptor0 = []byte{
-	// 216 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0xe2, 0xe2, 0x2d, 0x28, 0xca, 0xcf,
-	0x4a, 0x4d, 0x2e, 0xd1, 0x03, 0xd2, 0x25, 0xf9, 0x42, 0x9c, 0xc9, 0x45, 0x95, 0x05, 0x25, 0xf9,
-	0xf1, 0x05, 0x49, 0x4a, 0x7e, 0x5c, 0x5c, 0xce, 0x45, 0xa9, 0x29, 0xa9, 0x79, 0x25, 0x99, 0x89,
-	0x39, 0x42, 0x12, 0x5c, 0xec, 0x50, 0x95, 0x12, 0x8c, 0x0a, 0x8c, 0x1a, 0xac, 0x41, 0x30, 0xae,
-	0x90, 0x00, 0x17, 0x73, 0x76, 0x6a, 0xa5, 0x04, 0x13, 0x50, 0x94, 0x33, 0x08, 0xc4, 0x14, 0x12,
-	0xe1, 0x62, 0x2d, 0x4b, 0xcc, 0x29, 0x4d, 0x95, 0x60, 0x06, 0x8b, 0x41, 0x38, 0x4a, 0xc7, 0x19,
-	0xb9, 0xa4, 0x02, 0x20, 0x7a, 0x10, 0xe6, 0xfa, 0x17, 0xa4, 0x16, 0x25, 0x96, 0x64, 0xe6, 0xe7,
-	0x09, 0xb9, 0x73, 0xb1, 0x27, 0xe7, 0xe7, 0xe6, 0x26, 0xe6, 0xa5, 0x80, 0x2d, 0xe0, 0x33, 0xd2,
-	0xd5, 0x83, 0xbb, 0x45, 0x0f, 0xb7, 0x3e, 0x3d, 0x67, 0x88, 0xa6, 0x20, 0x98, 0x6e, 0x21, 0x73,
-	0x2e, 0xee, 0x64, 0xb8, 0xba, 0x62, 0xa0, 0xbb, 0x98, 0x35, 0xb8, 0x8d, 0x44, 0x91, 0x0c, 0x43,
-	0x98, 0x12, 0x84, 0xac, 0x52, 0x49, 0x9d, 0x8b, 0x1d, 0x6a, 0x98, 0x10, 0x3b, 0x17, 0xb3, 0xbb,
-	0x6b, 0x88, 0x00, 0x03, 0x88, 0x11, 0x0c, 0x64, 0x30, 0x0a, 0x71, 0x71, 0xb1, 0xb9, 0xb8, 0xfa,
-	0xb8, 0x86, 0xb8, 0x0a, 0x30, 0x25, 0xb1, 0x81, 0xc3, 0xca, 0x18, 0x10, 0x00, 0x00, 0xff, 0xff,
-	0xfd, 0xfd, 0x53, 0x78, 0x3c, 0x01, 0x00, 0x00,
+	// 536 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x09, 0x6e, 0x88, 0x02, 0xff, 0x9c, 0x54, 0xcb, 0x6e, 0xda, 0x40,
+	0x14, 0xc5, 0x80, 0xed, 0xf8, 0xd2, 0x44, 0xce, 0xa8, 0x0f, 0x8b, 0x76, 0x81, 0x1c, 0x55, 0xad,
+	0x5a, 0x95, 0x05, 0x5d, 0x56, 0x5d, 0x00, 0x1e, 0xa5, 0xa8, 0xa4, 0xa4, 0x63, 0xb2, 0xac, 0x90,
+	0x31, 0x53, 0x89, 0x16, 0x3f, 0x34, 0x36, 0x48, 0xf9, 0xa9, 0x7e, 0x48, 0x57, 0xfd, 0x87, 0xfe,
+	0x48, 0xc7, 0xe3, 0xf1, 0x83, 0x44, 0x45, 0x28, 0x2b, 0xee, 0x63, 0xce, 0x9d, 0x7b, 0xce, 0x1c,
+	0x0c, 0xa7, 0x31, 0x8b, 0x7e, 0x50, 0x3f, 0xed, 0xf3, 0xdf, 0x34, 0x42, 0x86, 0xcf, 0x6e, 0xe3,
+	0x34, 0x5a, 0xc4, 0x4b, 0xfb, 0x8f, 0x02, 0xdd, 0xeb, 0xbc, 0x39, 0x66, 0x74, 0x45, 0xc3, 0x74,
+	0xed, 0x6d, 0x66, 0x31, 0x65, 0x5e, 0xba, 0x8e, 0x42, 0x74, 0x09, 0xba, 0x1f, 0x05, 0x81, 0x17,
+	0xae, 0x2c, 0xa5, 0xa7, 0xbc, 0x3e, 0x1b, 0xbc, 0xeb, 0x97, 0xd8, 0xfe, 0xff, 0x71, 0xfd, 0x71,
+	0x0e, 0x22, 0x05, 0x1a, 0x59, 0xa0, 0xcb, 0x1d, 0xac, 0x26, 0x1f, 0xa4, 0x92, 0x22, 0x45, 0x26,
+	0xb4, 0x7e, 0xd2, 0x5b, 0xab, 0xc5, 0xab, 0x06, 0xc9, 0x42, 0xf4, 0x18, 0xd4, 0x9d, 0xb7, 0xd9,
+	0x52, 0xab, 0x2d, 0x6a, 0x79, 0x62, 0xbf, 0x02, 0x5d, 0x4e, 0x45, 0x3a, 0xb4, 0x2e, 0xf1, 0xdc,
+	0x6c, 0x64, 0x81, 0xcb, 0x03, 0x05, 0x01, 0x68, 0x0e, 0x9e, 0xe2, 0x39, 0x36, 0x9b, 0xf6, 0xdf,
+	0x26, 0x98, 0x72, 0xb5, 0x8a, 0xc8, 0xc7, 0xbb, 0x44, 0x2e, 0xee, 0x13, 0x39, 0xb0, 0x3e, 0x82,
+	0x76, 0xe8, 0x05, 0x54, 0xec, 0x6e, 0x10, 0x11, 0xa3, 0x1e, 0x74, 0x68, 0xb8, 0x5b, 0xb3, 0x28,
+	0x0c, 0x38, 0x7d, 0x49, 0xa0, 0x5e, 0x42, 0x2f, 0xc0, 0x90, 0x2c, 0x27, 0x2b, 0x41, 0x46, 0x25,
+	0x55, 0x01, 0x75, 0xe1, 0x24, 0xa0, 0xc1, 0x92, 0x32, 0xde, 0x54, 0x45, 0xb3, 0xcc, 0xd1, 0x53,
+	0xd0, 0xb6, 0x89, 0xe8, 0x68, 0xa2, 0x23, 0xb3, 0xec, 0x4e, 0xcf, 0xf7, 0x69, 0x92, 0x4c, 0xe9,
+	0x8e, 0x6e, 0x2c, 0x3d, 0xbf, 0xb3, 0x56, 0xb2, 0xbf, 0x57, 0x32, 0x71, 0x51, 0xc6, 0x04, 0x0f,
+	0xb9, 0x28, 0x8d, 0x2c, 0xbe, 0xb9, 0x76, 0xb2, 0x78, 0x4f, 0x2c, 0x74, 0x06, 0x30, 0x74, 0x9c,
+	0xc5, 0x15, 0xbe, 0x1a, 0x61, 0x62, 0xb6, 0xd0, 0x39, 0x9c, 0xe6, 0xbd, 0xa2, 0xd4, 0xe6, 0xcf,
+	0x61, 0x4e, 0x27, 0xee, 0x7c, 0xc1, 0x67, 0x39, 0xf8, 0xcb, 0x7c, 0x32, 0x9c, 0xba, 0xa6, 0x6a,
+	0xff, 0x52, 0xc0, 0xa8, 0xe4, 0xfd, 0x50, 0x32, 0x9d, 0xc5, 0x42, 0xe0, 0xce, 0xe0, 0xf9, 0x01,
+	0x81, 0x3f, 0x35, 0x48, 0x75, 0x1e, 0x7d, 0x86, 0x47, 0x7e, 0xcd, 0x43, 0x42, 0xe4, 0xce, 0xe0,
+	0xe5, 0x51, 0x4e, 0xe3, 0x93, 0xf6, 0xc0, 0xa3, 0x67, 0xf0, 0xa4, 0xb8, 0x8d, 0xd5, 0xcf, 0xdb,
+	0xbf, 0x9b, 0x60, 0xdd, 0xdd, 0x83, 0xd0, 0x24, 0x8e, 0xc2, 0x84, 0xa2, 0x11, 0x68, 0x49, 0xea,
+	0xa5, 0xdb, 0x44, 0xba, 0xe3, 0xcd, 0x81, 0xe5, 0x0b, 0x50, 0xdf, 0x15, 0x08, 0x22, 0x91, 0x99,
+	0x6d, 0x29, 0x63, 0x11, 0x93, 0x26, 0xc9, 0x13, 0x84, 0x2b, 0xe3, 0xb7, 0x04, 0xaf, 0xb7, 0xc7,
+	0x8c, 0x96, 0x8d, 0xea, 0x5f, 0x52, 0x37, 0x4b, 0x7b, 0xdf, 0x2c, 0xdd, 0x19, 0xe8, 0xf2, 0x3c,
+	0x7f, 0xce, 0xe6, 0x3a, 0x77, 0xb8, 0x4a, 0x78, 0xf4, 0x30, 0xdf, 0xda, 0x3d, 0xd0, 0x72, 0x6e,
+	0xc8, 0x00, 0x15, 0x13, 0x32, 0x23, 0xdc, 0x41, 0x1d, 0xd0, 0xdd, 0x9b, 0xf1, 0x18, 0xbb, 0xae,
+	0xa9, 0xd8, 0xdf, 0xe0, 0xa4, 0xd4, 0xee, 0x2b, 0x9c, 0x97, 0x6f, 0x59, 0x14, 0xa5, 0x07, 0x2e,
+	0x8e, 0xe0, 0x4a, 0xee, 0xa3, 0x97, 0x9a, 0xf8, 0x4e, 0xbd, 0xff, 0x17, 0x00, 0x00, 0xff, 0xff,
+	0xe3, 0x6a, 0x86, 0xe8, 0xb8, 0x04, 0x00, 0x00,
 }

@@ -1,12 +1,6 @@
 syntax = "proto3";
 package crypto_pb;
 
-message Credential {
-    int32 project = 1;
-    string key = 2;
-    string value = 3;
-}
-
 message ProjectCredentialOperation {
 
     enum Command {
@@ -16,6 +10,58 @@ message ProjectCredentialOperation {
     }
 
     Command command = 1;
-    repeated Credential credentials = 2;
-    
+    int32 project = 2;
+    string key = 3;
+    string value = 4;
+
+}
+
+message ProjectOperation {
+
+    enum Command {
+        CREATE = 0;
+        UPDATE = 1;
+        DELETE = 2;
+        ADD_MEMBER = 3;
+        DELETE_MEMBER = 4;
+        LIST_CREDENTIALS = 5;
+    }
+
+    Command command = 1;
+    string name = 2;
+    string environment = 3;
+    int32 projectId = 4; // Either name-environment combo or projectId will be required
+    int32 memberId = 5;
+    int32 userId = 6;
+    string accessLevel = 7;
+
+}
+
+message Operation {
+    oneof ProjectOrCredentialOp {
+        ProjectOperation projectOp = 1;
+        ProjectCredentialOperation credentialOp = 2;
+    }
+}
+
+message ProjectOperationResponse {
+    enum Status {
+        ERROR = 0;
+        SUCCESS = 1;
+    }
+
+    message Project {
+        int32 id = 1;
+        string name = 2;
+        string environment = 3;
+    }
+
+    Status status = 1;
+    string error = 2;
+    Project project = 3;
+    int32 memberId = 4;
+}
+
+message Response {
+    ProjectOperationResponse projectOpResponse = 1;
 }
