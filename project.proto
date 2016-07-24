@@ -1,7 +1,7 @@
 syntax = "proto3";
 package crypto_pb;
 
-message ProjectCredentialOperation {
+message CredentialOperation {
 
     enum Command {
         GET = 0;
@@ -19,12 +19,13 @@ message ProjectCredentialOperation {
 message ProjectOperation {
 
     enum Command {
-        CREATE = 0;
-        UPDATE = 1;
-        DELETE = 2;
-        ADD_MEMBER = 3;
-        DELETE_MEMBER = 4;
-        LIST_CREDENTIALS = 5;
+        LIST = 0;
+        CREATE = 1;
+        UPDATE = 2;
+        DELETE = 3;
+        LIST_CREDENTIALS = 4;
+        ADD_MEMBER = 5;
+        DELETE_MEMBER = 6;
     }
 
     Command command = 1;
@@ -40,7 +41,7 @@ message ProjectOperation {
 message Operation {
     oneof ProjectOrCredentialOp {
         ProjectOperation projectOp = 1;
-        ProjectCredentialOperation credentialOp = 2;
+        CredentialOperation credentialOp = 2;
     }
 }
 
