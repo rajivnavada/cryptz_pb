@@ -39,9 +39,11 @@ message ProjectOperation {
 }
 
 message Operation {
+    int32 opId = 1;
+
     oneof ProjectOrCredentialOp {
-        ProjectOperation projectOp = 1;
-        CredentialOperation credentialOp = 2;
+        ProjectOperation projectOp = 2;
+        CredentialOperation credentialOp = 3;
     }
 }
 
@@ -62,6 +64,7 @@ message ProjectOperationResponse {
     Project project = 2;
     int32 memberId = 3;
     repeated Credential credentials = 4;
+    repeated Project projects = 5;
 }
 
 message CredentialOperationResponse {
@@ -78,9 +81,10 @@ message Response {
     Status status = 1;
     string error = 2;
     string info = 3;
+    int32 opId = 4;
 
     oneof ProjectOrCredentialResponse {
-        ProjectOperationResponse projectOpResponse = 4;
-        CredentialOperationResponse credentialOpResponse = 5;
+        ProjectOperationResponse projectOpResponse = 5;
+        CredentialOperationResponse credentialOpResponse = 6;
     }
 }
